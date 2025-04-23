@@ -18,10 +18,10 @@ def splitIntoChunks(inputVideoPath: str, outputVideoName: str, chunkTimeLength: 
     )
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="This tool splits an input mp3 file into multiple chunks of a given time period")
-    parser.add_argument('filename', help='Path to input mp3 file')
-    parser.add_argument('time_period', help='Length of each output mp3 chunk')
-    parser.add_argument('--output', '-o', help='Optional file name for mp3 chunks', default='out')
+    parser = argparse.ArgumentParser(description="This tool splits an input mp4 file into multiple chunks of a given time period")
+    parser.add_argument('filename', help='Path to input mp4 file')
+    parser.add_argument('time_period', help='Length of each output mp4 chunk')
+    parser.add_argument('--output', '-o', help='Optional file name for mp4 chunks', default='out')
     args = parser.parse_args()
 
     inputFileName, timePeriod, outputFileName = args.filename, args.time_period, args.output
@@ -30,4 +30,4 @@ if __name__ == "__main__":
     folder_name = f"run_{timestamp}"
     os.makedirs(folder_name, exist_ok=True)
 
-    splitIntoChunks(inputFileName, f"{folder_name}/{outputFileName}_%03d.mp3", int(timePeriod))
+    splitIntoChunks(inputFileName, f"{folder_name}/{outputFileName}_%03d.mp4", int(timePeriod))
