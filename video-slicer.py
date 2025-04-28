@@ -4,14 +4,14 @@ import os
 from datetime import datetime
 
 # Uses ffmpeg to split video into chunks
-def splitIntoChunks(inputVideoPath: str, outputVideoName: str, chunkTimeLength: int = 10):
+def split_into_chunks(input_video_path: str, output_video_name: str, chunk_time_length: int = 10):
     (
-        ffmpeg.input(inputVideoPath)
+        ffmpeg.input(input_video_path)
             .output(
-                outputVideoName,
+                output_video_name,
                 codec='copy',
                 f='segment',
-                segment_time=chunkTimeLength,
+                segment_time=chunk_time_length,
                 reset_timestamps=True
             )
             .run()
@@ -25,11 +25,11 @@ if __name__ == "__main__":
     parser.add_argument('--output', '-o', help='Optional file name for mp4 chunks', default='out')
     args = parser.parse_args()
 
-    inputFileName, timePeriod, outputFileName = args.filename, args.time_period, args.output
+    input_file_name, time_period, output_file_name = args.filename, args.time_period, args.output
 
     # Creates a run folder to store chunked video based on current date+time
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     folder_name = f"run_{timestamp}"
     os.makedirs(folder_name, exist_ok=True)
 
-    splitIntoChunks(inputFileName, f"{folder_name}/{outputFileName}_%03d.mp4", int(timePeriod))
+    split_into_chunks(input_file_name, f"{folder_name}/{output_file_name}_%03d.mp4", int(time_period))
