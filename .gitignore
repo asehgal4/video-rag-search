@@ -2,3 +2,5 @@
 *.mp4
 # openai secrets
 .env
+# caption tests
+captions.txt
