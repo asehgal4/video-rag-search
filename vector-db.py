@@ -3,15 +3,15 @@ import uuid
 
 class ChromaDB:
     def __init__(self):
+        self.chroma_client = chromadb.Client()
         self.collection = None
         self.embedding_model = None
 
     def initialize_chroma_db_collection(self, collection_name: str) -> chromadb.Collection:
-        chroma_client = chromadb.Client()
         if self.embedding_model != None:
-            self.collection = chroma_client.get_or_create_collection(name=collection_name, embedding_function=self.embedding_model)
+            self.collection = self.chroma_client.get_or_create_collection(name=collection_name, embedding_function=self.embedding_model)
         else:
-            self.collection = chroma_client.get_or_create_collection(name=collection_name)
+            self.collection = self.chroma_client.get_or_create_collection(name=collection_name)
 
     def upload_video_to_collection(self, video_name: str, video_transcript: str, start_time: int, end_time: int, id=str(uuid.uuid5()), embedding_vector=None) -> None:
         try:
@@ -45,6 +45,16 @@ class ChromaDB:
             start_time, end_time = times[i]
             self.upload_video_to_collection(video_name, video_transcript, start_time, end_time)
     
+    def query_k_clips(self, video_id: str, query: str, k: int):
+        return self.collection.query(
+            query_texts=[query],
+            n_results=k,
+            where={"video_id":video_id}
+        )
+
+        
+
+
             
     
     
