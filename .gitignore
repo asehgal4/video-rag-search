@@ -1,2 +1,4 @@
 # prevent committing mp4 files to git
 *.mp4
+# openai secrets
+.env
