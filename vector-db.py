@@ -33,7 +33,7 @@ class ChromaDB:
         else:
             print("Successfully added video to collection!")
     
-    def upload_chunks_to_collection(self, video_name: str, video_transcripts=[], times = [], ids=[], auto_embed_videos=False):
+    def upload_chunks_to_collection(self, video_name: str, video_transcripts=[], times = [], ids=[]):
         if len(times) != len(video_transcripts):
             print("Each video chunk must have a transcript/description and start/end times!")
             return
