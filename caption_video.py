@@ -6,7 +6,6 @@ import cv2
 import base64
 from openai import AzureOpenAI
 from collections import deque
-import cv2
 
 try:
     from dotenv import load_dotenv
