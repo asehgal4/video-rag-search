@@ -6,7 +6,8 @@ import cv2
 import base64
 from openai import AzureOpenAI
 from collections import deque
-import cv2
+
+
 API_VERSION = "2024-08-01-preview"
 client = AzureOpenAI(
             azure_endpoint=  os.getenv("AZURE_OPENAI_ENDPOINT"),

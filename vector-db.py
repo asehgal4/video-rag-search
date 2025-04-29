@@ -33,17 +33,18 @@ class ChromaDB:
         else:
             print("Successfully added video to collection!")
     
-    def upload_chunks_to_collection(self, video_name: str, video_transcripts=[], times = [], ids=[]):
-        if len(times) != len(video_transcripts):
+    def upload_chunks_to_collection(self, video_name: str, video_chunk_names=[], video_transcripts=[], times = [], ids=[]):
+        if len(times) != len(video_transcripts) or len(video_chunk_names) != len(video_transcripts):
             print("Each video chunk must have a transcript/description and start/end times!")
             return
         if len(ids) != 0 and len(ids) != len(video_transcripts):
             print("If not using default ids, each video chunk needs to have a unique id")
         
         for i in range(len(video_transcripts)):
+            video_chunk_name = video_chunk_names[i]
             video_transcript = video_transcripts[i]
             start_time, end_time = times[i]
-            self.upload_video_to_collection(video_name, video_transcript, start_time, end_time)
+            self.upload_video_to_collection(video_name, video_transcript, start_time, end_time, video_chunk_name)
     
     def query_k_clips(self, video_id: str, query: str, k: int):
         return self.collection.query(
