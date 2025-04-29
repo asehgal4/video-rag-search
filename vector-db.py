@@ -7,7 +7,7 @@ class ChromaDB:
         self.collection = None
         self.embedding_model = None
 
-    def initialize_chroma_db_collection(self, collection_name: str) -> chromadb.Collection:
+    def initialize_chroma_db_collection(self, collection_name: str) -> None:
         if self.embedding_model != None:
             self.collection = self.chroma_client.get_or_create_collection(name=collection_name, embedding_function=self.embedding_model)
         else:
