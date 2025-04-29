@@ -31,7 +31,7 @@ Your main goals are:
 
 """
 
-def caption_video(client, video, user_prompt):
+def caption_chunk(client, video, user_prompt):
     messages = [
         {"role": "system", "content": [
             {"type": "text", "text": SYSTEM_PROMPT}
@@ -56,37 +56,37 @@ def caption_video(client, video, user_prompt):
         print(f"Error: {e}")
         return None
 
+def caption_video(video_chunks: str, caption_file: str):
+    for video in os.listdir(video_chunks):
+        if video.endswith(".mp4"):
+            video_path = os.path.join(video_chunks, video)
+            print(f"Processing {video_path}")
+            
+            # send the video to gpt
+            video_frames = []
+            cap = cv2.VideoCapture(video_path)
+            total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+            print(f"Total frames: {total_frames}")
+            max_frames = 50
+            
+            while cap.isOpened():
+                ret, frame = cap.read()
+                if not ret:
+                    break
+                _, frame = cv2.imencode(".jpg", frame)
+                frame = base64.b64encode(frame).decode("utf-8")
+                video_frames.append(frame)
+                if len(video_frames) >= max_frames:
+                    caption = caption_chunk(client, video_frames, "Please describe the video and identify any hazards.")
+                    if caption:
+                        with open(caption_file, "a") as f:
+                            f.write(f"{caption}\n")
+                    else:
+                        print(f"Failed to get caption for {video}")
+                    video_frames = []
+            cap.release()
 
-for video in os.listdir(video_chunks):
-    if video.endswith(".mp4"):
-        video_path = os.path.join(video_chunks, video)
-        print(f"Processing {video_path}")
-        
-        # send the video to gpt
-        video_frames = []
-        cap = cv2.VideoCapture(video_path)
-        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        print(f"Total frames: {total_frames}")
-        max_frames = 50
-        
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if not ret:
-                break
-            _, frame = cv2.imencode(".jpg", frame)
-            frame = base64.b64encode(frame).decode("utf-8")
-            video_frames.append(frame)
-            if len(video_frames) >= max_frames:
-                caption = caption_video(client, video_frames, "Please describe the video and identify any hazards.")
-                if caption:
-                    with open(caption_file, "a") as f:
-                        f.write(f"{caption}\n")
-                else:
-                    print(f"Failed to get caption for {video}")
-                video_frames = []
-        cap.release()
 
-
-        
+            
 
 
