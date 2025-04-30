@@ -4,7 +4,7 @@ from video_slicer import chunk_video
 import argparse
 import os
 
-
+# Function to take lists of video names and paths and chunk times for each video to upload to vector db
 def initialize_db(video_paths: list, video_names: list, chunk_times: list):
     db = ChromaDB()
     db.initialize_chroma_db_collection("videos")
@@ -19,7 +19,7 @@ def initialize_db(video_paths: list, video_names: list, chunk_times: list):
     return db
 
 
-
+# Main function/entry point for uplading individual videos to vector db for rag pipeline
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="This initializes the vector database with videos and their chunks for the rag pipeline")
     parser.add_argument('filepath', help='Path to input mp4 file')

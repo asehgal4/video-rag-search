@@ -7,12 +7,14 @@ class ChromaDB:
         self.collection = None
         self.embedding_model = None
 
+    # Grabs a collection from chromadb to work on
     def initialize_chroma_db_collection(self, collection_name: str) -> None:
         if self.embedding_model != None:
             self.collection = self.chroma_client.get_or_create_collection(name=collection_name, embedding_function=self.embedding_model)
         else:
             self.collection = self.chroma_client.get_or_create_collection(name=collection_name)
 
+    # Uploads a single video to a vector db
     def upload_video_to_collection(self, video_name: str, video_transcript: str, start_time: str, end_time: str, id=str(uuid.uuid4()), embedding_vector=None) -> None:
         try:
             if embedding_vector != None:
@@ -33,6 +35,7 @@ class ChromaDB:
         else:
             print("Successfully added video to collection!")
     
+    # Function to upload a list of video chunks and associated transcripts and times to a vector db
     def upload_chunks_to_collection(self, video_name: str, video_chunk_names=[], video_transcripts=[], times = []):
         if len(times) != len(video_transcripts) or len(video_chunk_names) != len(video_transcripts):
             print("Each video chunk must have a transcript/description and start/end times!")
@@ -44,6 +47,7 @@ class ChromaDB:
             start_time, end_time = times[i]
             self.upload_video_to_collection(video_name, video_transcript, start_time, end_time, video_chunk_name)
     
+    # Find k most relevant clips to query based on the clip's description/transcript
     def query_k_clips(self, video_id: str, query: str, k: int):
         return self.collection.query(
             query_texts=[query],
