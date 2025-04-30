@@ -52,7 +52,7 @@ class ChromaDB:
         return self.collection.query(
             query_texts=[query],
             n_results=k,
-            where={"video_id":video_id}
+            where={"video-source":video_id}
         )
 
         

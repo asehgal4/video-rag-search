@@ -28,23 +28,14 @@ Your main goals are:
 
 """
 
-def caption_chunk(client, video, user_prompt):
-    messages = [
-        {"role": "system", "content": [
-            {"type": "text", "text": SYSTEM_PROMPT}
-        ]},
-        {"role": "user", "content": [
-            {"type": "text", "text": user_prompt},
-            *map(lambda x: {"image": x, "resize": 768}, video),
-        ]}
-    ]
+def query_model(client, model, max_token_len, messages):
 
     try:
         response = client.chat.completions.create(
             #   deployment_id="YOUR_DEPLOYMENT_NAME",
-            model=CAPTION_MODEL,
+            model=model,
             messages=messages,
-            max_tokens=MAX_CAPTION_TOKEN_LEN,
+            max_tokens=max_token_len,
         )
         if response:
             return response.choices[0].message.content
@@ -94,7 +85,16 @@ def caption_video(video_chunks: str) -> list:
                 frame = base64.b64encode(frame).decode("utf-8")
                 video_frames.append(frame)
                 if len(video_frames) >= max_frames:
-                    caption = caption_chunk(client, video_frames, "Please describe the video and identify any hazards.")
+                    messages = [
+                        {"role": "system", "content": [
+                            {"type": "text", "text": SYSTEM_PROMPT}
+                        ]},
+                        {"role": "user", "content": [
+                            {"type": "text", "text": "Please describe the video and identify any important information."},
+                            *map(lambda x: {"image": x, "resize": 768}, video_frames),
+                        ]}
+                    ]
+                    caption = query_model(client, CAPTION_MODEL, MAX_CAPTION_TOKEN_LEN, messages)
                     if caption:
                         captions[-1] += caption + "\n"
                     else:
