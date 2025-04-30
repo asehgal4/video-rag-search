@@ -1,5 +1,5 @@
-from initialize_db_utils.vector_db import ChromaDB
-from initialize_db_utils.caption_video import query_model, client, MAX_CAPTION_TOKEN_LEN as MAX_QUERY_LENGTH, CAPTION_MODEL as QUERY_MODEL
+from utils.vector_db import ChromaDB
+from utils.caption_video import query_model, client, MAX_CAPTION_TOKEN_LEN as MAX_QUERY_LENGTH, CAPTION_MODEL as QUERY_MODEL
 import argparse
 
 SYSTEM_PROMPT = """
