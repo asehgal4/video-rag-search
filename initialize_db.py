@@ -1,6 +1,6 @@
-from caption_video import caption_video
-from vector_db_utils import ChromaDB
-from video_slicer import chunk_video
+from initialize_db_utils.caption_video import caption_video
+from initialize_db_utils.vector_db import ChromaDB
+from initialize_db_utils.video_slicer import chunk_video
 import argparse
 import os
 

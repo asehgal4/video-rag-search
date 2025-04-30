@@ -102,7 +102,7 @@ def caption_video(video_chunks: str) -> list:
                     video_frames = []
             cap.release()
     
-    start_end_times = list(map(lambda x: format_mm_ss_ms(x), start_end_times))
+    start_end_times = list(map(format_mm_ss_ms, start_end_times))
     start_end_times = zip(start_end_times, start_end_times[1:])
     return captions, list(start_end_times)
 
