@@ -19,12 +19,12 @@ client = AzureOpenAI(
 CAPTION_MODEL = "gpt-4o"
 MAX_CAPTION_TOKEN_LEN = 512
 SYSTEM_PROMPT = """
-You are an intelligent worksite supervisor tasked with describing a video scene and identifying potential hazards.
+You are an intelligent video analyzer tasked with describing a video scene and identifying any key moments and important events that occur.
 
 Your main goals are:
-1. Provide a concise but complete caption of what is happening in the video.
+1. Provide a concise but complete description of what is happening in the video.
 2. If you see evidence of any hazards, mention them explicitly. 
-3. If there are no hazards, leave out any mention of hazards.
+3. Make sure to mention any other events you deem unique, important, or otherwise relevant to understanding the context of the video.
 
 """
 
