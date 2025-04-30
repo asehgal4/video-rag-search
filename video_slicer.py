@@ -17,6 +17,14 @@ def split_into_chunks(input_video_path: str, output_video_name: str, chunk_time_
             .run()
     )
 
+def chunk_video(input_file_name: str, output_file_name: str, time_period: int) -> str:
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    folder_name = f"run_{timestamp}"
+    os.makedirs(folder_name, exist_ok=True)
+
+    split_into_chunks(input_file_name, f"{folder_name}/{output_file_name}_%03d.mp4", time_period)
+    return folder_name
+
 if __name__ == "__main__":
     # Parser to get arguments (file name, chunk size, optional output file chunk name)
     parser = argparse.ArgumentParser(description="This tool splits an input mp4 file into multiple chunks of a given time period")

@@ -1,6 +1,3 @@
-video_chunks = "./video_chunks"
-caption_file = "./captions.txt"
-
 import os
 import cv2
 import base64
@@ -56,11 +53,29 @@ def caption_chunk(client, video, user_prompt):
         print(f"Error: {e}")
         return None
 
-def caption_video(video_chunks: str, caption_file: str):
-    for video in os.listdir(video_chunks):
+def format_mm_ss_ms(total_seconds: float) -> str:
+    minutes = int(total_seconds) // 60
+    seconds = int(total_seconds) % 60
+    milliseconds = int((total_seconds - int(total_seconds)) * 1000)
+
+    return f"{minutes:02d}:{seconds:02d}.{milliseconds:03d}"
+
+
+def get_video_duration(cap: cv2.VideoCapture) -> float:
+    fps         = cap.get(cv2.CAP_PROP_FPS)
+    frame_count = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+    if fps == 0:
+        raise ValueError("FPS is zero, can't compute duration")
+    return frame_count / fps
+
+def caption_video(video_chunks: str) -> list:
+    captions = []
+    start_end_times = [0]
+    for video in sorted(os.listdir(video_chunks)):
         if video.endswith(".mp4"):
             video_path = os.path.join(video_chunks, video)
             print(f"Processing {video_path}")
+            captions.append("")
             
             # send the video to gpt
             video_frames = []
@@ -68,6 +83,8 @@ def caption_video(video_chunks: str, caption_file: str):
             total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
             print(f"Total frames: {total_frames}")
             max_frames = 50
+
+            start_end_times.append(start_end_times[-1] + get_video_duration(cap))
             
             while cap.isOpened():
                 ret, frame = cap.read()
@@ -79,12 +96,15 @@ def caption_video(video_chunks: str, caption_file: str):
                 if len(video_frames) >= max_frames:
                     caption = caption_chunk(client, video_frames, "Please describe the video and identify any hazards.")
                     if caption:
-                        with open(caption_file, "a") as f:
-                            f.write(f"{caption}\n")
+                        captions[-1] += caption + "\n"
                     else:
                         print(f"Failed to get caption for {video}")
                     video_frames = []
             cap.release()
+    
+    start_end_times = list(map(lambda x: format_mm_ss_ms(x), start_end_times))
+    start_end_times = zip(start_end_times, start_end_times[1:])
+    return captions, list(start_end_times)
 
 
             
