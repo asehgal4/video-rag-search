@@ -28,23 +28,14 @@ Your main goals are:
 
 """
 
-def caption_chunk(client, video, user_prompt):
-    messages = [
-        {"role": "system", "content": [
-            {"type": "text", "text": SYSTEM_PROMPT}
-        ]},
-        {"role": "user", "content": [
-            {"type": "text", "text": user_prompt},
-            *map(lambda x: {"image": x, "resize": 768}, video),
-        ]}
-    ]
+def query_model(client, model, max_token_len, messages):
 
     try:
         response = client.chat.completions.create(
             #   deployment_id="YOUR_DEPLOYMENT_NAME",
-            model=CAPTION_MODEL,
+            model=model,
             messages=messages,
-            max_tokens=MAX_CAPTION_TOKEN_LEN,
+            max_tokens=max_token_len,
         )
         if response:
             return response.choices[0].message.content
@@ -82,7 +73,7 @@ def caption_video(video_chunks: str) -> list:
             cap = cv2.VideoCapture(video_path)
             total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
             print(f"Total frames: {total_frames}")
-            max_frames = 50
+            max_frames = 1
 
             start_end_times.append(start_end_times[-1] + get_video_duration(cap))
             
@@ -94,12 +85,22 @@ def caption_video(video_chunks: str) -> list:
                 frame = base64.b64encode(frame).decode("utf-8")
                 video_frames.append(frame)
                 if len(video_frames) >= max_frames:
-                    caption = caption_chunk(client, video_frames, "Please describe the video and identify any hazards.")
+                    messages = [
+                        {"role": "system", "content": [
+                            {"type": "text", "text": SYSTEM_PROMPT}
+                        ]},
+                        {"role": "user", "content": [
+                            {"type": "text", "text": "Please describe the video and identify any important information."},
+                            *map(lambda x: {"image": x, "resize": 768}, video_frames),
+                        ]}
+                    ]
+                    caption = query_model(client, CAPTION_MODEL, MAX_CAPTION_TOKEN_LEN, messages)
                     if caption:
                         captions[-1] += caption + "\n"
                     else:
                         print(f"Failed to get caption for {video}")
                     video_frames = []
+                    break
             cap.release()
     
     start_end_times = list(map(format_mm_ss_ms, start_end_times))
