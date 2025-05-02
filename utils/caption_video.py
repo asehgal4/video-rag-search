@@ -73,7 +73,7 @@ def caption_video(video_chunks: str) -> list:
             cap = cv2.VideoCapture(video_path)
             total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
             print(f"Total frames: {total_frames}")
-            max_frames = 50
+            max_frames = 1
 
             start_end_times.append(start_end_times[-1] + get_video_duration(cap))
             
@@ -100,6 +100,7 @@ def caption_video(video_chunks: str) -> list:
                     else:
                         print(f"Failed to get caption for {video}")
                     video_frames = []
+                    break
             cap.release()
     
     start_end_times = list(map(format_mm_ss_ms, start_end_times))

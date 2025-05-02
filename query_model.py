@@ -42,7 +42,6 @@ if __name__ == "__main__":
     documents=query_results["documents"][0]
     metadatas=query_results["metadatas"][0]
 
-    print(ids)
 
     system_prompt = SYSTEM_PROMPT
     for i, (doc, metadata) in enumerate(zip(documents, metadatas), start=1):
@@ -50,6 +49,7 @@ if __name__ == "__main__":
         Description: {doc}
         Start Time: {metadata['start-time']}
         End Time: {metadata['end-time']}\n\n\n"""
+        print(doc)
     
     messages = [
             {"role": "system", "content": [
