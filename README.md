@@ -17,3 +17,9 @@ Current advancements in vision-language models (VLMs) have shown remarkable capa
 ## Example Videos
 
 Building a log cabin (15min): https://drive.google.com/file/d/1dqVTdJBdy0mIe0NOzb9mebdXU4BhSEoj/view?usp=sharing
+
+### Ideas for Future Improvements
+- Use the full frames/chunks as the output of RAG
+- Use a text and image embedding model instead of passing frames through a captioning model
+- Have our chunks overlap to get more accurate timestamps
+- Have a dynamic top k selection where we don’t pre specify a k and instead find the most relevant chunks that are within a certain distance of the query
