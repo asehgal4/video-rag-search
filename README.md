@@ -9,8 +9,7 @@ Current advancements in vision-language models (VLMs) have shown remarkable capa
 2. Create a `.env` file with environment variables for `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_KEY`
 
 ### Initialize ChromaDB With Relevant Videos
-1. Upload your videos to the `videos` directory.
-2. Run the `initialize_db.py` script as follows: `python initalize_db.py filepath-to-video video_name -t optional-size-of-each-chunk`
+1. Run the `initialize_db.py` script as follows: `python initalize_db.py filepath-to-video video_name -t optional-size-of-each-chunk`
 
 ### Query Your Videos
 1. Run the `query_model.py` script as follows: `python query_model.py query video_name`
